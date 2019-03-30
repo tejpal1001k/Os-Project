@@ -4,6 +4,8 @@ struct pro{
     int id,brustTime,arrivalTime,q,remainingTime;
 };
 
+int turnAround[100];
+int waitingTime[100];
 struct pro Process[100];
 struct pro Queue1[100],Queue2[100];
 
@@ -47,9 +49,8 @@ void sortQueue2(int n){
     }
 }
 
-
-void main(){
-	int n;
+void main() {
+    int n;
     printf("Enter no of Process : "); scanf("%d",&n);
 	int i;
     for(i=0;i<n;i++){
@@ -59,13 +60,14 @@ void main(){
         Process[i].id = (i+1);
         Process[i].remainingTime = Process[i].brustTime;
     }
-    
+
     sortbyArrivalTime(n);
 
     printf("\n");
-    for(i=0;i<n;i++)
-        printf("Process %d  %d %d %d\n",Process[i].id,Process[i].arrivalTime,Process[i].brustTime,Process[i].q);
-   	int len1,len2;    
+    // for(int i=0;i<n;i++)
+    //     printf("Process %d  %d %d %d\n",Process[i].id,Process[i].arrivalTime,Process[i].brustTime,Process[i].q);
+   
+    int len1,len2;    
     len1 = len2 = 0; 
     int timer = 0;
     int pos = 0;
@@ -89,8 +91,9 @@ void main(){
             if(temp.remainingTime<=timeQuantum){
                 timer += temp.remainingTime;
                 temp.remainingTime = 0;
-            	printf("\nProcess %d ended\n at time %d",temp.id,timer);    
-			}
+                turnAround[temp.id] = timer-temp.arrivalTime;
+                waitingTime[temp.id]= turnAround[temp.id] - temp.brustTime;
+            }
             else
             {
                 timer +=2;
@@ -107,7 +110,8 @@ void main(){
             if(temp.remainingTime<=timeQuantum){
                 timer += temp.remainingTime;
                 temp.remainingTime = 0;
-            	printf("\nProcess %d ended\n at time %d",temp.id,timer);
+                turnAround[temp.id] = timer-temp.arrivalTime;
+                waitingTime[temp.id]= turnAround[temp.id] - temp.brustTime;
             }
             else
             {
@@ -119,4 +123,16 @@ void main(){
         else
             timer++;
     }
+    printf("\n");
+    int avgwT=0,avgTT=0;
+        printf("PROCESS ID   TurnAround Time    Waiting Time\n");
+    for(i=1;i<=n;i++){
+        printf("Process %d : %10d %15d\n",i,turnAround[i],waitingTime[i]);
+        avgwT += waitingTime[i];
+        avgTT += turnAround[i];
+    }
+    printf("Average Waiting Time %f",(avgwT/(1.0*n)));
+    printf("Average TurnAround Time %f",(avgTT/(1.0*n)));
+
 }
+
