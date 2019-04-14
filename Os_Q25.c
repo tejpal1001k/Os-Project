@@ -69,5 +69,33 @@ int main()
             temp[i] = temp[i] - time_quantum; 
         	total = total + time_quantum; 
         }
+        
+        for(b=0;b<limit;b++)
+		{
+			if(b==i)
+			prio[b]+=1;
+			else
+			prio[b]+=2;
+		}
+		if(temp[i] == 0 && counter == 1) 
+        { 
+            x--; 
+            printf("\nProcess[%d]\t\t%d\t\t %d\t\t\t %d\t\t%d", p[i], b_time[i], total - a_time[i], total - a_time[i] - b_time[i],prio[i]);
+            wait_time = wait_time + total - a_time[i] - b_time[i]; 
+        	turnaround_time = turnaround_time + total - a_time[i]; 
+            counter = 0; 
+        } 
+        if(i == limit - 1) 
+        {
+        	i = 0; 
+		}
+        else if(a_time[i + 1] <= total) 
+        {
+        	i++;            
+		}
+        else 
+        {
+        	i = 0;
+		}
 	}
 }
